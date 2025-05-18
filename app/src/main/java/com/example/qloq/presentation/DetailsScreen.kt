@@ -29,11 +29,11 @@ import java.lang.System.currentTimeMillis
 
 //This module renders the pet details screen
 @Composable
-fun DetailsScreen(qloSprite: QloSprite, sharedPreferences: SharedPreferences) {
+fun DetailsScreen(ePet: EPet, sharedPreferences: SharedPreferences) {
 
     SideEffect {
         //Side effect is rendered once per composition
-        compareTime(qloSprite, sharedPreferences)
+        compareTime(ePet, sharedPreferences)
     }
 
     Column(
@@ -62,7 +62,7 @@ fun DetailsScreen(qloSprite: QloSprite, sharedPreferences: SharedPreferences) {
                 )
                 Text(
                     color = Color(0xFFFFFFFF),
-                    text = "Name: ${qloSprite.name}",
+                    text = "Name: ${ePet.name}",
                     style = MaterialTheme.typography.caption2,
                     fontFamily = FontFamily.Monospace,
 
@@ -74,11 +74,11 @@ fun DetailsScreen(qloSprite: QloSprite, sharedPreferences: SharedPreferences) {
                     .padding(start = 15.dp)
             ) {
                 CustomText(text = "Hunger:")
-                CustomLinearProgressBar(progress = (qloSprite.hungerStat.toDouble() / 100).toFloat())
+                CustomLinearProgressBar(progress = (ePet.hunger.toDouble() / 100).toFloat())
                 CustomText(text = "Thirst:")
-                CustomLinearProgressBar(progress = (qloSprite.thirstStat.toDouble() / 100).toFloat())
+                CustomLinearProgressBar(progress = (ePet.thirst.toDouble() / 100).toFloat())
                 CustomText(text = "Happiness:")
-                CustomLinearProgressBar(progress = (qloSprite.happinessStat.toDouble() / 100).toFloat())
+                CustomLinearProgressBar(progress = (ePet.happiness.toDouble() / 100).toFloat())
             }
 
             Row(
@@ -105,7 +105,7 @@ fun DetailsScreen(qloSprite: QloSprite, sharedPreferences: SharedPreferences) {
     }
 }
 
-fun compareTime(qloSprite: QloSprite, sharedPreferences: SharedPreferences) {
+fun compareTime(ePet: EPet, sharedPreferences: SharedPreferences) {
     val lastTimeSeen = sharedPreferences.getLong("timeStamp", currentTimeMillis())
     val curTime = currentTimeMillis()
     val timeDiff = curTime - lastTimeSeen
@@ -116,14 +116,14 @@ fun compareTime(qloSprite: QloSprite, sharedPreferences: SharedPreferences) {
 //    Log.d("Time3", "Time Difference: " + timeDiff)
 
     //Qlo Sprite details are updated
-    qloSprite.updateStats(timeDiff)
+    ePet.updateStats(timeDiff)
 
     //Save new decremented Values to storage
     val editor = sharedPreferences.edit()
     editor.putLong("timeStamp", currentTimeMillis())
-    editor.putInt("hungerStat", qloSprite.hungerStat)
-    editor.putInt("thirstStat", qloSprite.thirstStat)
-    editor.putInt("happinessStat", qloSprite.happinessStat)
+    editor.putInt("hungerStat", ePet.hunger)
+    editor.putInt("thirstStat", ePet.thirst)
+    editor.putInt("happinessStat", ePet.happiness)
     editor.apply()
 }
 
@@ -164,7 +164,7 @@ private fun CustomLinearProgressBar(progress: Float) {
 //Enables Device specific preview of the DetailsScreen in the Default Preview Android Studio window
 @Composable
 fun DetailsPreview() {
-    val sprite = QloSprite("Qlo", 45, 45, 45)
+    val ePet = EPet("Qlo", 45, 45, 45)
     val context = LocalContext.current
-    DetailsScreen(sprite, PreferenceManager.getDefaultSharedPreferences(context))
+    DetailsScreen(ePet, PreferenceManager.getDefaultSharedPreferences(context))
 }

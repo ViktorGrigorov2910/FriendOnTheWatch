@@ -11,7 +11,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -33,7 +32,7 @@ import kotlin.concurrent.schedule
 @Composable
 fun RenderPet(
     swipeDismissableNavController: NavController,
-    qloSprite: QloSprite,
+    ePet: EPet,
     sharedPreferences: SharedPreferences
 ) {
 
@@ -58,16 +57,16 @@ fun RenderPet(
                 // Background Image
                 painterResource(R.drawable.bg),
                 contentDescription = null,
-                contentScale = ContentScale.FillHeight
+                contentScale = ContentScale.FillBounds
             )
             Row(
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .padding(top = 20.dp)
-                    .width(120.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                HappinessIndicator(qloSprite)
+                HappinessIndicator(ePet)
                 DetailsButtonComposable(swipeDismissableNavController)
             }
             Image(
@@ -75,7 +74,8 @@ fun RenderPet(
                 painterResource(R.drawable.pink_monster),
                 contentDescription = null,
                 modifier = Modifier
-                    .align(Alignment.Center)
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 56.dp)
                     .size(50.dp),
             )
             Row(
@@ -118,26 +118,26 @@ fun RenderPet(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(bottom = 15.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 OutlinedButton(
                     // Hunger Button
                     onClick = {
                         fadeAnim()
-                        qloSprite.incHunger()
+                        ePet.incHunger()
 
                         val editor = sharedPreferences.edit()
-                        editor.putInt("hungerStat", qloSprite.hungerStat)
+                        editor.putInt("hungerStat", ePet.hunger)
                         editor.apply()
                     },
                     colors = ButtonDefaults.buttonColors(Color(0xFFFFFFFF)),
-                    modifier = Modifier.size(40.dp),
+                    modifier = Modifier.size(32.dp),
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.burger_solid),
                         contentDescription = "Image",
                         modifier = Modifier
-                            .size(20.dp),
+                            .size(16.dp),
                         tint = Color(0xFFA7727D)
                     )
                 }
@@ -145,20 +145,20 @@ fun RenderPet(
                     //Thirst Button
                     onClick = {
                         fadeAnim()
-                        qloSprite.incThirst()
+                        ePet.incThirst()
 
                         val editor = sharedPreferences.edit()
-                        editor.putInt("thirstStat", qloSprite.thirstStat)
+                        editor.putInt("thirstStat", ePet.thirst)
                         editor.apply()
                     },
                     colors = ButtonDefaults.buttonColors(Color(0xFFFFFFFF)),
-                    modifier = Modifier.size(40.dp)
+                    modifier = Modifier.size(32.dp)
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.mug_hot_solid),
                         contentDescription = "Image",
                         modifier = Modifier
-                            .size(20.dp),
+                            .size(16.dp),
                         tint = Color(0xFFA7727D)
                     )
                 }
@@ -166,20 +166,20 @@ fun RenderPet(
                     //Happiness Button
                     onClick = {
                         fadeAnim()
-                        qloSprite.incHappiness()
+                        ePet.incHappiness()
 
                         val editor = sharedPreferences.edit()
-                        editor.putInt("happinessStat", qloSprite.happinessStat)
+                        editor.putInt("happinessStat", ePet.happiness)
                         editor.apply()
                     },
                     colors = ButtonDefaults.buttonColors(Color(0xFFFFFFFF)),
-                    modifier = Modifier.size(40.dp)
+                    modifier = Modifier.size(32.dp)
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.hand_regular),
                         contentDescription = "Image",
                         modifier = Modifier
-                            .size(20.dp),
+                            .size(16.dp),
                         tint = Color(0xFFA7727D)
                     )
                 }
@@ -188,23 +188,25 @@ fun RenderPet(
     }
 }
 
-@Composable
-fun HappinessIndicator(qloSprite: QloSprite) {
-    val avgHealth = qloSprite.getAverage()
 
+/**
+ * Accepts[ePet] as param
+ * Calculates and shows the current state of the pet
+ * */
+@Composable
+fun HappinessIndicator(ePet: EPet) {
+    val avgHealth = ePet.getAverage()
     Box(
-        // Details Screen Button
         modifier = Modifier
             .size(35.dp)
-            .clip(CircleShape)
-            .background(Color.White)
-            .padding(start = 7.dp, top = 7.dp),
+            .background(Color.White , CircleShape),
     ) {
         if (avgHealth > 60) {
             Icon(
                 painter = painterResource(id = R.drawable.face_laugh_squint_regular),
                 contentDescription = "Image",
                 modifier = Modifier
+                    .align(Alignment.Center)
                     .size(20.dp),
                 tint = Color(0xFF4CAF50)
             )
@@ -213,6 +215,7 @@ fun HappinessIndicator(qloSprite: QloSprite) {
                 painter = painterResource(id = R.drawable.face_meh_regular),
                 contentDescription = "Image",
                 modifier = Modifier
+                    .align(Alignment.Center)
                     .size(20.dp),
                 tint = Color(0xFFFF5722)
             )
@@ -221,19 +224,22 @@ fun HappinessIndicator(qloSprite: QloSprite) {
                 painter = painterResource(id = R.drawable.face_sad_cry_regular),
                 contentDescription = "Image",
                 modifier = Modifier
+                    .align(Alignment.Center)
                     .size(20.dp),
                 tint = Color(0xFFCC0C1C)
             )
         }
     }
-
 }
 
+
+/**
+ * Accepts[NavController] as param
+ * Shows details button and navigates to details screen
+ * */
 @Composable
 fun DetailsButtonComposable(swipeDismissableNavController: NavController) {
-
     OutlinedButton(
-        // Details Screen Button
         onClick = { swipeDismissableNavController.navigate("DetailsScreen") },
         colors = ButtonDefaults.buttonColors(Color(0xFFFFFFFF)),
         modifier = Modifier.size(35.dp)
@@ -242,7 +248,8 @@ fun DetailsButtonComposable(swipeDismissableNavController: NavController) {
             painter = painterResource(id = R.drawable.bars_solid),
             contentDescription = "Image",
             modifier = Modifier
-                .size(20.dp),
+                .size(20.dp)
+                .align(Alignment.Center),
             tint = Color(0xFFA7727D)
         )
     }
@@ -256,7 +263,7 @@ fun DetailsButtonComposable(swipeDismissableNavController: NavController) {
 fun PetPreview() {
     val swipeDismissableNavController = rememberSwipeDismissableNavController()
     val context = LocalContext.current
-    val sprite = QloSprite("Qlo", 45, 45, 45)
+    val sprite = EPet("Qlo", 45, 45, 45)
 
     RenderPet(
         swipeDismissableNavController,

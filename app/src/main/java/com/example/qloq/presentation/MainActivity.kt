@@ -28,20 +28,19 @@ class MainActivity : ComponentActivity() {
         val thirstStat = sharedPreferences.getInt("thirstStat", 30)
         val happinessStat = sharedPreferences.getInt("happinessStat", 30)
 
-        //Update the Sprite's statistics based on the last time they were seen.
-        val sprite = QloSprite("Qlo", hungerStat, thirstStat, happinessStat)
+        //Update the EPet's statistics based on the last time they were seen.
+        val ePet = EPet("Qlo", hungerStat, thirstStat, happinessStat)
         val lastTimeSeen = sharedPreferences.getLong("timeStamp", currentTimeMillis())
-        sprite.updateStats(lastTimeSeen - currentTimeMillis())
+        ePet.updateStats(lastTimeSeen - currentTimeMillis())
 
         setContent {
-            QloqApp(sprite, sharedPreferences)
+            QloqApp(ePet, sharedPreferences)
         }
     }
 }
 
-//The initial Qloq application module
 @Composable
-fun QloqApp(sprite: QloSprite, sharedPreferences: SharedPreferences) {
+fun QloqApp(ePet: EPet, sharedPreferences: SharedPreferences) {
     QLOQTheme {
         val swipeDismissableNavController = rememberSwipeDismissableNavController()
 
@@ -50,10 +49,10 @@ fun QloqApp(sprite: QloSprite, sharedPreferences: SharedPreferences) {
             startDestination = "Landing",
         ) {
             composable("Landing") {
-                RenderPet(swipeDismissableNavController, sprite, sharedPreferences)
+                RenderPet(swipeDismissableNavController, ePet, sharedPreferences)
             }
             composable("DetailsScreen") {
-                DetailsScreen(sprite, sharedPreferences)
+                DetailsScreen(ePet, sharedPreferences)
             }
         }
     }
@@ -63,7 +62,7 @@ fun QloqApp(sprite: QloSprite, sharedPreferences: SharedPreferences) {
 //Enables Device specific previews in the Default Preview Android Studio window
 @Composable
 fun DefaultPreview() {
-    val sprite = QloSprite("Qlo", 45, 45, 45)
+    val sprite = EPet("Qlo", 45, 45, 45)
     val context = LocalContext.current
     QloqApp(sprite, PreferenceManager.getDefaultSharedPreferences(context))
 }
