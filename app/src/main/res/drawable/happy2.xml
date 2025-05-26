@@ -1,0 +1,22 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="73dp"
+    android:height="46dp"
+    android:viewportWidth="73"
+    android:viewportHeight="46">
+
+  <!-- Left eye -->
+  <path
+      android:pathData="M14.6,19.1c2.2,2.4 2.5,8.9 0.5,11.3 -3.7,4.5 -9.8,-0.4 -8.8,-7 1.1,-6.4 4.7,-8.3 8.3,-4.3z"
+      android:fillColor="#000000" /> <!-- Black eye color -->
+
+  <!-- Right eye -->
+  <path
+      android:pathData="M62.9,18.4c3.8,4.5 1.6,13.6 -3.3,13.6 -2.9,-0 -4.5,-1.9 -5.2,-6.2 -1,-5.9 5.3,-11.3 8.5,-7.4z"
+      android:fillColor="#000000" />
+
+  <!-- Mouth -->
+  <path
+      android:pathData="M42,35.7c-0.1,4.1 -4.7,6.7 -9,5.1 -2.8,-1.1 -4,-2.5 -4,-5.1 0,-1.4 1,-1.7 6.5,-1.7 5.5,-0 6.5,0.3 6.5,1.7z"
+      android:fillColor="#000000" />
+
+</vector>

@@ -12,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -27,6 +28,7 @@ import androidx.wear.compose.navigation.rememberSwipeDismissableNavController
 import com.example.qloq.R
 import java.util.*
 import kotlin.concurrent.schedule
+import androidx.core.content.edit
 
 //This module renders the pet interactions screen
 @Composable
@@ -71,7 +73,8 @@ fun RenderPet(
             }
             Image(
                 // Sprite Image
-                painterResource(R.drawable.pink_monster),
+                painterResource(R.drawable.happy2),
+                colorFilter = ColorFilter.tint(Color.Cyan),
                 contentDescription = null,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
@@ -126,9 +129,9 @@ fun RenderPet(
                         fadeAnim()
                         ePet.incHunger()
 
-                        val editor = sharedPreferences.edit()
-                        editor.putInt("hungerStat", ePet.hunger)
-                        editor.apply()
+                        sharedPreferences.edit() {
+                            putInt("hungerStat", ePet.hunger)
+                        }
                     },
                     colors = ButtonDefaults.buttonColors(Color(0xFFFFFFFF)),
                     modifier = Modifier.size(32.dp),
@@ -147,9 +150,9 @@ fun RenderPet(
                         fadeAnim()
                         ePet.incThirst()
 
-                        val editor = sharedPreferences.edit()
-                        editor.putInt("thirstStat", ePet.thirst)
-                        editor.apply()
+                        sharedPreferences.edit() {
+                            putInt("thirstStat", ePet.thirst)
+                        }
                     },
                     colors = ButtonDefaults.buttonColors(Color(0xFFFFFFFF)),
                     modifier = Modifier.size(32.dp)
@@ -168,9 +171,9 @@ fun RenderPet(
                         fadeAnim()
                         ePet.incHappiness()
 
-                        val editor = sharedPreferences.edit()
-                        editor.putInt("happinessStat", ePet.happiness)
-                        editor.apply()
+                        sharedPreferences.edit() {
+                            putInt("happinessStat", ePet.happiness)
+                        }
                     },
                     colors = ButtonDefaults.buttonColors(Color(0xFFFFFFFF)),
                     modifier = Modifier.size(32.dp)
